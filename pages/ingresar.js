@@ -14,21 +14,37 @@ class Ingresar extends React.Component {
         };
     }
 
-    changeInput(event) {
+    changeLoginValues(event) {
         let target = event.target;
         let name = target.name;
         let val = target.value;
         
         this.setState({
-            persona: {
-                ...this.state.persona,
+            usuarioLogin: {
+                ...this.state.usuarioLogin,
                 [name]: val
-            }
+            },
+            errorLogin: null
         });
     }
 
     checkValues(event) {
-        console.log(this.state.persona);
+        fetch(process.env.API_URL + "login/ingresar", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify(this.state.usuarioLogin)
+        })
+        .then(response => response.json())
+        .then((data) => {
+            if(data.error) {
+                console.log(data.error);
+            } else {
+                localStorage.setItem("user", JSON.stringify(data));
+            }
+        });
 
         event.preventDefault();
     }
@@ -39,8 +55,8 @@ class Ingresar extends React.Component {
             <>
                 <PublicLayout>
                     <form onSubmit = {(e) => this.checkValues(e)}>
-                        <input type = "email" name = "email" onChange = {(e) => this.changeInput(e)} /><br/>
-                        <input type = "password" name = "password" onChange = {(e) => this.changeInput(e)} /><br/>
+                        <input type = "email" name = "email" onChange = {(e) => this.changeLoginValues(e)} /><br/>
+                        <input type = "password" name = "password" onChange = {(e) => this.changeLoginValues(e)} /><br/>
                         <input type = "submit" value = "Revisar" />
                     </form>
                 </PublicLayout>

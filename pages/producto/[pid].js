@@ -2,7 +2,6 @@
 import React from "react";
 import PublicLayout from '../../components/PublicLayout.js';
 import { withRouter } from "next/router";
-import PublicComponent from "../../components/PublicComponent.js";
 
 
 const Precios = ({precio, precio_des}) => {
@@ -48,11 +47,9 @@ const RenderProduct = ({producto}) => {
     );
 }
 
-class Producto extends PublicComponent {
-    constructor(props) {
+class Producto extends React.Component {
+    constructor() {
         super();
-
-        console.log(this.state.carrito);
 
         this.state = {
             producto: []

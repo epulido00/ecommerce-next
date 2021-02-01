@@ -1,7 +1,6 @@
 import React from 'react';
 import PublicLayout from '../components/PublicLayout.js';
 import Link from 'next/link';
-import PublicComponent from '../components/PublicComponent.js';
 
 
 const Precios = ({precio, precio_des}) => {
@@ -50,7 +49,7 @@ const Destacados = ({props}) => {
     );
 }
 
-class Home extends PublicComponent {
+class Home extends React.Component {
 
     constructor() {
         super();
@@ -58,6 +57,7 @@ class Home extends PublicComponent {
         this.state = {
             destacados: []
         }
+        
     }
 
     getDestacados() {
