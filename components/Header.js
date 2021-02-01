@@ -1,13 +1,13 @@
+import { useRouter } from 'next/router';
 import {useEffect, useState} from 'react';
 
-const InNotLog = () => {
+const InNotLog = ({logOut}) => {
     return(
         <>
             <div className = "header-user">
                 <div className = "user-content">
                     <ul>
-                        <a href = {process.env.BASE_URL + "ingresar"}><li>Ingresar</li></a>
-                        <li>Registrarse</li>
+                        <a href = {process.env.BASE_URL + "ingresar"}><li>Ingresar / Registrarse</li></a>
                     </ul>
                 </div>
             </div>
@@ -15,7 +15,7 @@ const InNotLog = () => {
     );
 }
 
-const InLog = ({user}) => {
+const InLog = ({user, logOut}) => {
     return(
         <>
             <div className = "header-user">
@@ -30,23 +30,25 @@ const InLog = ({user}) => {
     );
 }
 
-const logOut = () => {
-    fetch(process.env.API_URL + "login/logout", {
-        method: 'GET',
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        }
-    })
-    .then(response => response.json())
-    .then(() => {
-        localStorage.removeItem("user");
-    });
-}
-
 const Header = () => {
 
     const [user, setUser] = useState(null);
+    const router = useRouter();
+
+    function logOut() {
+        fetch(process.env.API_URL + "login/logout", {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(() => {
+            localStorage.removeItem("user");
+            router.push("/ingresar");
+        });
+    }
 
     useEffect(() => {
         if(!user) {
@@ -56,7 +58,7 @@ const Header = () => {
 
     return(
         <header className = "header">
-            {!user ? <InNotLog /> : <InLog user = {user}/> }
+            {!user ? <InNotLog logOut = {logOut}/> : <InLog user = {user} logOut = {logOut}/> }
             <div className = "header-content">
                 <div className = "logo">
                     <a href = {process.env.BASE_URL}><h1>Tienda con Next y Laravel</h1></a>

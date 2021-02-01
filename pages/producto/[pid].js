@@ -20,7 +20,7 @@ const Precios = ({precio, precio_des}) => {
     }
 }
 
-const RenderProduct = ({producto}) => {
+const RenderProduct = ({user, producto}) => {
 
     return(
         <>
@@ -38,9 +38,13 @@ const RenderProduct = ({producto}) => {
                         <Precios precio = {producto.precio}  precio_des = {producto.precio_descuento}/>
                     </div>
                     <br/>
+                    {user ? 
                     <div className = "btn-add">
                         Agregar al carrito
                     </div>
+                    :
+                    <span>Debes estar logueado para agregar al carrito</span>
+                    }
                 </div>
             </div>
         </>
@@ -52,7 +56,8 @@ class Producto extends React.Component {
         super();
 
         this.state = {
-            producto: []
+            producto: [],
+            user: null
         };
     }
 
@@ -72,6 +77,7 @@ class Producto extends React.Component {
 
     componentDidMount() {
         this.getProducto();
+        this.setState({user: localStorage.getItem("user") || null});
     }
 
     componentDidUpdate() {
@@ -82,7 +88,7 @@ class Producto extends React.Component {
         return(
             <>
                 <PublicLayout>
-                    <RenderProduct router = {this.props.router} producto = {this.state.producto}/>
+                    <RenderProduct user  = {this.state.user}  producto = {this.state.producto}/>
                 </PublicLayout> 
             </>
         );

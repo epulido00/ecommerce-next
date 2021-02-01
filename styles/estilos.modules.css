@@ -1,3 +1,7 @@
+h1 {
+    margin:0;
+}
+
 section {
     margin-top: 10px;
     width: 100%;
@@ -253,4 +257,49 @@ section {
     }
 }
 
+/* Login */
+.login-box-master {
+    width:100%;
+    display:flex;
+    justify-content: center;
+}
+
+.login-box {
+    padding: 10px;
+    width: 500px;
+}
+
+.login-box form .form-input{
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 5px;
+    font-size: 16px;
+    outline: none;
+    border: none;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.login-box form .form-input:focus{
+    border-bottom: 2px solid gray;
+}
+
+.btn {
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    float: right;
+    background-color: #FFF;
+    border: 2px solid gray;
+}
+
+.btn:hover {
+    background-color: gray;
+    color: #FFF;
+    transition: 0.5s;
+}
+
+.btn-form {
+
+}
 
