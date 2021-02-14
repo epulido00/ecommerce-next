@@ -20,37 +20,6 @@ const Precios = ({precio, precio_des}) => {
     }
 }
 
-const RenderProduct = ({user, producto}) => {
-
-    return(
-        <>
-            <div className = "producto-box">
-                <div className = "producto-img">
-                    <img src = {"/imgs/" + (producto.imagen != null ? producto.imagen : "default.jpg")} />
-                </div>
-                <div className = "producto-info">
-                    <h1>{producto.nombre}</h1>
-                    <div className = "producto-descripcion">
-                        {producto.descripcion}   
-                    </div>
-                    <br/>
-                    <div className = "producto-precio">
-                        <Precios precio = {producto.precio}  precio_des = {producto.precio_descuento}/>
-                    </div>
-                    <br/>
-                    {user ? 
-                    <div className = "btn-add">
-                        Agregar al carrito
-                    </div>
-                    :
-                    <span>Debes estar logueado para agregar al carrito</span>
-                    }
-                </div>
-            </div>
-        </>
-    );
-}
-
 class Producto extends React.Component {
     constructor() {
         super();
@@ -81,14 +50,60 @@ class Producto extends React.Component {
     }
 
     componentDidUpdate() {
-        this.getProducto();
+        if(this.state.producto.length == 0) {
+            this.getProducto();
+        }
+    }
+
+    addToCart(producto) {
+        var cart = (localStorage.getItem("cart")) ? JSON.parse(localStorage.getItem("cart")) : [];
+        var isInCart = false;
+
+        if(cart.length == 0) {
+            cart.push(producto);
+            localStorage.setItem("cart", JSON.stringify(cart));
+        } else {
+            for(let item of cart) {
+                if(item.id_producto == producto.id_producto) {
+                    isInCart = true;
+                    break;
+                }
+            }
+
+            if(!isInCart) {
+                cart.push(producto);
+                localStorage.setItem("cart", JSON.stringify(cart));
+            }
+        }
     }
 
     render() {
         return(
             <>
                 <PublicLayout>
-                    <RenderProduct user  = {this.state.user}  producto = {this.state.producto}/>
+                    <div className = "producto-box">
+                        <div className = "producto-img">
+                            <img src = {"/imgs/" + (this.state.producto.imagen != null ? this.state.producto.imagen : "default.jpg")} />
+                        </div>
+                        <div className = "producto-info">
+                            <h1>{this.state.producto.nombre}</h1>
+                            <div className = "producto-descripcion">
+                                {this.state.producto.descripcion}   
+                            </div>
+                            <br/>
+                            <div className = "producto-precio">
+                                <Precios precio = {this.state.producto.precio}  precio_des = {this.state.producto.precio_descuento}/>
+                            </div>
+                            <br/>
+                            {this.state.user ? 
+                            <div className = "btn-add" onClick = {() => this.addToCart(this.state.producto)}>
+                                Agregar al carrito
+                            </div>
+                            :
+                            <span>Debes estar logueado para agregar al carrito</span>
+                            }
+                        </div>
+                    </div>
                 </PublicLayout> 
             </>
         );

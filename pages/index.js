@@ -19,16 +19,16 @@ const Precios = ({precio, precio_des}) => {
     }
 }
 
-const Destacados = ({props}) => {
+const Destacados = ({props, add}) => {
 
     return(
         <>
             <div className = "destacados-list">
                 {props.map((item) => 
                     
-                    <Link href = {process.env.BASE_URL + "producto/" + item.id_producto}>
-                        <a>
                         <div className = "destacado-box">
+                            <Link href = {process.env.BASE_URL + "producto/" + item.id_producto}>
+                            <a>
                             <div className = "imagen">
                                 <img src = {"/imgs/" + (item.imagen != null ? item.imagen : "default.jpg")} />
                             </div>
@@ -40,9 +40,13 @@ const Destacados = ({props}) => {
                                     <Precios precio = {item.precio}  precio_des = {item.precio_descuento}/>
                                 </div>
                             </div>
+                            </a>
+                            </Link>
+                            <div style = {{width: "auto", float: "right", color: "#FFF",margin: "10px", cursor: "pointer", backgroundColor: "red", padding: "10px 15px", borderRadius: "8px"}} onClick = {() => add(item)}>
+                                Agregar
+                            </div>
                         </div>
-                        </a>
-                    </Link>
+                        
                 )}
             </div>
         </>
@@ -72,6 +76,28 @@ class Home extends React.Component {
         .then((data) => this.setState({destacados: data}));
     }
 
+    addToCart(producto) {
+        var cart = (localStorage.getItem("cart")) ? JSON.parse(localStorage.getItem("cart")) : [];
+        var isInCart = false;
+
+        if(cart.length == 0) {
+            cart.push(producto);
+            localStorage.setItem("cart", JSON.stringify(cart));
+        } else {
+            for(let item of cart) {
+                if(item.id_producto == producto.id_producto) {
+                    isInCart = true;
+                    break;
+                }
+            }
+
+            if(!isInCart) {
+                cart.push(producto);
+                localStorage.setItem("cart", JSON.stringify(cart));
+            }
+        }
+    }
+
     componentDidMount() {
         this.getDestacados();
     }
@@ -81,7 +107,7 @@ class Home extends React.Component {
             <>
                 <PublicLayout>
                     <h1>Destacados</h1>
-                    <Destacados props = {this.state.destacados}/>
+                    <Destacados props = {this.state.destacados} add = {this.addToCart}/>
                 </PublicLayout>
             </>
         );

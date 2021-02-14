@@ -1,7 +1,10 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+
 import { useRouter } from 'next/router';
 import {useEffect, useState} from 'react';
 
-const InNotLog = ({logOut}) => {
+const InNotLog = () => {
     return(
         <>
             <div className = "header-user">
@@ -16,6 +19,13 @@ const InNotLog = ({logOut}) => {
 }
 
 const InLog = ({user, logOut}) => {
+
+    const [cart, setCart] = useState(JSON.parse(localStorage.getItem("cart")) || []);
+
+    useEffect(() => {
+        console.log("Hola");
+    }, [localStorage.getItem("cart")]);
+
     return(
         <>
             <div className = "header-user">
@@ -24,6 +34,12 @@ const InLog = ({user, logOut}) => {
                         <a><li>{user.nombre + " " + user.apellido}</li></a>
                         <li onClick = {logOut}>Salir</li>
                     </ul>
+                    <a href = "/carrito">
+                    <div id = "carrito" className = "carrito">
+                        <div className = "badge">{cart ? cart.length : 0}</div>
+                        <FontAwesomeIcon icon={faShoppingCart} className = "icon"/>
+                    </div>
+                    </a>
                 </div>
             </div>
         </>
@@ -33,6 +49,7 @@ const InLog = ({user, logOut}) => {
 const Header = () => {
 
     const [user, setUser] = useState(null);
+    
     const router = useRouter();
 
     function logOut() {
@@ -52,13 +69,13 @@ const Header = () => {
 
     useEffect(() => {
         if(!user) {
-            setUser(JSON.parse(localStorage.getItem("user")));
+            setUser(JSON.parse(localStorage.getItem("user")) || null);
         }
     });
 
     return(
         <header className = "header">
-            {!user ? <InNotLog logOut = {logOut}/> : <InLog user = {user} logOut = {logOut}/> }
+            {!user ? <InNotLog /> : <InLog user = {user} logOut = {logOut}/> }
             <div className = "header-content">
                 <div className = "logo">
                     <a href = {process.env.BASE_URL}><h1>Tienda con Next y Laravel</h1></a>
@@ -70,8 +87,8 @@ const Header = () => {
             <div className = "navbar">
                 <div className = "navbar-content">
                     <ul>
-                        <li>Inicio</li>
-                        <li>Categorías</li>
+                        <a href = {process.env.BASE_URL}><li>Inicio</li></a>
+                        <a><li>Categorías</li></a>
                     </ul>
                 </div>
             </div>
