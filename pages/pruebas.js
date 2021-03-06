@@ -1,19 +1,45 @@
-import { useEffect, useState } from 'react';
 
-function CountInputChanges() {
-  const [value, setValue] = useState('');
-  const [count, setCount] = useState(-1);
+import counterReducer from '../stores/cart.js';
 
-  useEffect(() => setCount(count + 1), [value]);
+const Other = () => {
 
-  const onChange = ({ target }) => setValue(target.value);
+  const algo = counterReducer;
 
-  return (
+  function increment() {
+    algo.dispatch({type: "increment"});
+  }
+
+  function decrement() {
+    algo.dispatch({type: "decrement"});
+  }
+
+  return(
     <div>
-      <input type="text" value={value} onChange={onChange} />
-      <div>Number of changes: {count}</div>
+      Aqui también se debe de actualizar, Carrito con Redux, <button onClick = {decrement}>-</button> {algo.getState().value} <button onClick = {increment}>+</button>
     </div>
   );
 }
 
-export default CountInputChanges;
+const Test = () => {
+
+  const algo = counterReducer;
+
+  function increment() {
+    algo.dispatch({type: "increment"});
+    console.log(algo.getState().value);
+  }
+
+  function decrement() {
+    algo.dispatch({type: "decrement"});
+    console.log(algo.getState().value);
+  }
+
+  return(
+    <div style = {{padding: "10px"}}>
+      <Other/>
+      Carrito con Redux, <button onClick = {decrement}>-</button> {algo.getState().value} <button onClick = {increment}>+</button>
+    </div>
+  );
+};
+
+export default Test;
